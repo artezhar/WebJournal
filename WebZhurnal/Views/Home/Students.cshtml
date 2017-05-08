@@ -1,0 +1,75 @@
+﻿@model StudentRateModel
+@{
+    ViewData["Title"] = "Contact";
+    bool isTeacher = User.Claims.Any(c => (c.Type == "Type") && (c.Value == "Teacher"));
+}
+
+@*@(Html
+        .Grid(Model.Students)
+        .Build(columns =>
+        {
+            columns.Add(student => student.UserName).Titled("Логин ученика");
+            Model.Subjects.ForEach(subj => columns.Add(u => Model.Rates.FirstOrDefault(rate => rate.StudentId == u.Id && rate.SubjectId == subj.Id) == null ?
+                                                            Model.Rates.FirstOrDefault(rate => rate.StudentId == u.Id && rate.SubjectId == subj.Id).Value : 0)
+                                                            //.RenderedAs(
+                                                            .Titled(subj.Name));
+
+
+            // columns.Add(model => model.Birthday).Titled("Birth date");
+            // columns.Add(model => model.IsWorking).Titled("Employed");
+        })
+        .Filterable()
+        .Sortable()
+        .Pageable()
+    )*@
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Ученик</th>
+            @foreach (var s in Model.Subjects)
+            {
+                <th>@s.Name</th>
+            }
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var stud in isTeacher? Model.Students:Model.Students.Where(s=>s.Id==Model.CurrentUserId))
+        {
+            <tr>
+                <td>@(stud.Claims.FirstOrDefault(c=> c.ClaimType == "Name")?.ClaimValue??stud.UserName)</td>
+                @foreach (var s in Model.Subjects)
+                {
+                    bool mySubject = User.Claims.Any(c => (c.Type == "Subject") && (c.Value == s.Id.ToString()));
+                    <td @(mySubject?"class=success":"") data-student-id="@stud.Id" data-subject-id="@s.Id" @(mySubject?"contenteditable=true":"")>@Model.Rates.SingleOrDefault(r => r.StudentId == stud.Id && r.SubjectId == s.Id)?.Value</td>
+                }
+            </tr>
+
+        }
+    </tbody>
+</table>
+<div id="alertok" style="position:fixed; top:50%; left:48%; display:none" class="alert alert-success" >Оценка записана!</div>
+<div id="alerterr" style="position:fixed; top:50%; left:48%; display:none" class="alert alert-success">Упс..</div>
+@section Scripts{
+    <script>
+        $('table').on('focus', '[contenteditable]', function () {
+            var $this = $(this);
+            $this.data('before', $this.html());
+            return $this;
+        }).on('focusout', '[contenteditable]', function () {
+            var $this = $(this);
+            if ($this.data('before') !== $this.html()) {
+                $this.data('before', $this.html());
+                $this.trigger('change');
+                $.ajax({
+                    url: "/Home/SetRate",
+                    data: { studentId: $(this).data('student-id'), subjectId: $(this).data('subject-id'), value: $(this).html() },
+                    type: 'post',
+                    async: true,
+                    success: function () { $('#alertok').show(); $('#alertok').fadeOut('slow'); },
+                    error: function () { $('#alerterr').show(); $('#alerterr').fadeOut('slow'); }
+                });
+            }
+            return $this;
+        });
+    </script>
+}
