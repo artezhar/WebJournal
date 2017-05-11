@@ -13,7 +13,10 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Content Include="wwwroot\css\mvc-grid.css" />
+    <Content Remove="wwwroot/js\mvc-grid.js" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Content Include="wwwroot\js\mvc-grid.js" />
   </ItemGroup>
   <ItemGroup>

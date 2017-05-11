@@ -1,27 +1,40 @@
-
+п»ї
 @{
     ViewData["Title"] = "Index";
 }
 
-<h2>Администрирование</h2>
+<br />
+<h2>РђРґРјРёРЅРёСЃС‚СЂРёСЂРѕРІР°РЅРёРµ</h2>
 
 <style>
-    .abtn{
-        width:100%;
-        display:block;
-        line-height:100%;
-        vertical-align:middle;
-        text-align:center;
+    .abtn {
+        width: 100%;
+        display: block;
+        line-height: 200px;
+        vertical-align: middle;
+        text-align: center;
+        height: 200px;
+        cursor: pointer;
+        text-decoration: none;
+        font-size: 48px;
     }
+
+        .abtn span:hover, .abtn:hover {
+            text-decoration: none;
+        }
 </style>
 
 <div class="row">
     <div class="col-md-4">
-        <a class="abtn info">
-            <span>Студенты</span>
+        <a class="abtn bg-info">
+            <span>РџРѕР»СЊР·РѕРІР°С‚РµР»Рё</span>
         </a>
     </div>
     <div class="col-md-4"></div>
-    <div class="col-md-4"></div>
+    <div class="col-md-4">
+        <a class="abtn bg-info" asp-controller="Subjects">
+            <span>РџСЂРµРґРјРµС‚С‹</span>
+        </a>
+    </div>
 </div>
 
