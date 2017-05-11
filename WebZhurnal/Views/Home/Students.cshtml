@@ -2,6 +2,8 @@
 @{
     ViewData["Title"] = "Contact";
     bool isTeacher = User.Claims.Any(c => (c.Type == "Type") && (c.Value == "Teacher"));
+    bool isAdmin = User.Claims.Any(c => (c.Type == "Type") && (c.Value == "Admin"));
+    bool isGroup = User.Claims.Any(c => (c.Type == "Type") && (c.Value == "Group"));
 }
 
 @*@(Html
@@ -22,6 +24,7 @@
         .Sortable()
         .Pageable()
     )*@
+<h3>Оценки</h3>
 <table class="table table-striped">
     <thead>
         <tr>
@@ -33,13 +36,15 @@
         </tr>
     </thead>
     <tbody>
-        @foreach (var stud in isTeacher? Model.Students:Model.Students.Where(s=>s.Id==Model.CurrentUserId))
+        @foreach (var stud in isTeacher||isAdmin? Model.Students:
+            isGroup? Model.Students
+            :Model.Students.Where(s=>s.Id==Model.CurrentUserId))
         {
             <tr>
                 <td>@(stud.Claims.FirstOrDefault(c=> c.ClaimType == "Name")?.ClaimValue??stud.UserName)</td>
                 @foreach (var s in Model.Subjects)
                 {
-                    bool mySubject = User.Claims.Any(c => (c.Type == "Subject") && (c.Value == s.Id.ToString()));
+                    bool mySubject = isAdmin|| User.Claims.Any(c => (c.Type == "Subject") && (c.Value == s.Id.ToString()));
                     <td @(mySubject?"class=success":"") data-student-id="@stud.Id" data-subject-id="@s.Id" @(mySubject?"contenteditable=true":"")>@Model.Rates.SingleOrDefault(r => r.StudentId == stud.Id && r.SubjectId == s.Id)?.Value</td>
                 }
             </tr>

@@ -7,7 +7,6 @@
     <title>@ViewData["Title"] - WebZhurnal</title>
 
     <environment names="Development">
-        <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
         <link rel="stylesheet" href="~/css/site.css" />
     </environment>
     <environment names="Staging,Production">
@@ -18,6 +17,11 @@
     </environment>
         @Html.Raw(JavaScriptSnippet.FullScript)
         <link href="~/css/mvc-grid.css" rel="stylesheet" />
+
+    <link href="~/lib/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="~/lib/bootstrap/dist/css/font-awesome.min.css" rel="stylesheet" />
+    <link href="~/lib/bootstrap/dist/css/imagehover.min.css" rel="stylesheet" />
+    <link href="~/lib/bootstrap/dist/css/style.css" rel="stylesheet" />
 
 </head>
 <body>

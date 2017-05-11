@@ -1,0 +1,45 @@
+﻿@model WebZhurnal.Models.ApplicationUser
+
+@{
+    ViewData["Title"] = "Delete";
+}
+
+<br />
+<h3>Вы удаляете пользователя @Html.DisplayFor(model => model.UserName) </h3>
+<div>
+    <dl class="dl-horizontal">
+        <input type="hidden" asp-for="Id" />
+        <dt>
+           Тип
+        </dt>
+        <dd>
+            @Model.Claims.FirstOrDefault(c => c.ClaimType == "Type")?.ClaimValue?.Translate()
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.UserName)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.UserName)
+        </dd>
+      <dt>
+            @Html.DisplayNameFor(model => model.Email)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Email)
+        </dd>
+        
+        <dt>
+            @Html.DisplayNameFor(model => model.PhoneNumber)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.PhoneNumber)
+        </dd>
+    </dl>
+    
+    <form asp-action="Delete">
+        <div class="form-actions no-color">
+            <input type="submit" value="Удалить" class="btn btn-danger" /> |
+            <a asp-action="Index">Назад</a>
+        </div>
+    </form>
+</div>

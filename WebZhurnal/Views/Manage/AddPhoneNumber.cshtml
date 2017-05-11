@@ -2,14 +2,14 @@
 @{
     ViewData["Title"] = "Add Phone Number";
 }
-
-<h2>@ViewData["Title"].</h2>
+<br />
+<br />
 <form asp-controller="Manage" asp-action="AddPhoneNumber" method="post" class="form-horizontal">
-    <h4>Add a phone number.</h4>
+    <h4>Добавить номер</h4>
     <hr />
     <div asp-validation-summary="All" class="text-danger"></div>
     <div class="form-group">
-        <label asp-for="PhoneNumber" class="col-md-2 control-label"></label>
+        <label asp-for="PhoneNumber" class="col-md-2 control-label">ВВедите номер</label>
         <div class="col-md-10">
             <input asp-for="PhoneNumber" class="form-control" />
             <span asp-validation-for="PhoneNumber" class="text-danger"></span>
@@ -17,7 +17,7 @@
     </div>
     <div class="form-group">
         <div class="col-md-offset-2 col-md-10">
-            <button type="submit" class="btn btn-default">Send verification code</button>
+            <button type="submit" class="btn btn-default">Выслать код подтверждения</button>
         </div>
     </div>
 </form>

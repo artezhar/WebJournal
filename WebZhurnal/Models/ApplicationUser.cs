@@ -15,12 +15,7 @@ namespace WebZhurnal.Models
 
         }
 
-        /*public UserType Type
-        {
-            get
-            {
-                return ennu Claims.SingleOrDefault(c => c.ClaimType == "Type").ClaimValue
-                    }
-        }*/
+
+        
     }
 }

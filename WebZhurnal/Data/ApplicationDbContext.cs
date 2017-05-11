@@ -25,5 +25,6 @@ namespace WebZhurnal.Data
 
         public DbSet<Subject> Subjects { get; set; }
         public DbSet<StudentRate> Rates { get; set; }
+        public DbSet<WebZhurnal.Models.ApplicationUser> ApplicationUser { get; set; }
     }
 }
