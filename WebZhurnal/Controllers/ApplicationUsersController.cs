@@ -7,24 +7,26 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using WebZhurnal.Data;
 using WebZhurnal.Models;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 
 namespace WebZhurnal.Controllers
 {
-    public class UsersController : Controller
+    public class ApplicationUsersController : Controller
     {
         private readonly ApplicationDbContext _context;
 
-        public UsersController(ApplicationDbContext context)
+        public ApplicationUsersController(ApplicationDbContext context)
         {
             _context = context;    
         }
 
+        // GET: ApplicationUsers
         public async Task<IActionResult> Index()
         {
-            return View(await _context.ApplicationUser.Include(u=>u.Claims). ToListAsync());
+            var applicationDbContext = _context.ApplicationUser.Include(a => a.Group);
+            return View(await applicationDbContext.ToListAsync());
         }
 
+        // GET: ApplicationUsers/Details/5
         public async Task<IActionResult> Details(string id)
         {
             if (id == null)
@@ -33,6 +35,7 @@ namespace WebZhurnal.Controllers
             }
 
             var applicationUser = await _context.ApplicationUser
+                .Include(a => a.Group)
                 .SingleOrDefaultAsync(m => m.Id == id);
             if (applicationUser == null)
             {
@@ -42,39 +45,31 @@ namespace WebZhurnal.Controllers
             return View(applicationUser);
         }
 
+        // GET: ApplicationUsers/Create
         public IActionResult Create()
         {
-            ViewData["GroupId"] = new SelectList(_context.Groups, "Id", "Name");
+            ViewData["GroupId"] = new SelectList(_context.Groups, "Id", "Id");
             return View();
         }
 
+        // POST: ApplicationUsers/Create
+        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
+        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,UserName,Email,PhoneNumber,GroupId")] ApplicationUser applicationUser, string type, string name, string password="`1qw23E")
+        public async Task<IActionResult> Create([Bind("GroupId,Id,UserName,NormalizedUserName,Email,NormalizedEmail,EmailConfirmed,PasswordHash,SecurityStamp,ConcurrencyStamp,PhoneNumber,PhoneNumberConfirmed,TwoFactorEnabled,LockoutEnd,LockoutEnabled,AccessFailedCount")] ApplicationUser applicationUser)
         {
             if (ModelState.IsValid)
             {
-               
-                try
-                {
-                    var identityClaim = new IdentityUserClaim<string> { ClaimType = "Type", ClaimValue = type };
-                    applicationUser.Claims.Add(identityClaim);
-                    var nameClaim = new IdentityUserClaim<string> { ClaimType = "Name", ClaimValue = name };
-                    applicationUser.Claims.Add(nameClaim);
-                    _context.Add(applicationUser);
-                    await _context.SaveChangesAsync();
-                }
-                catch
-                {
-                    return View("Error");
-                }
-
+                _context.Add(applicationUser);
+                await _context.SaveChangesAsync();
                 return RedirectToAction("Index");
             }
-            ViewData["GroupId"] = new SelectList(_context.Groups, "Id", "Name",applicationUser.GroupId);
+            ViewData["GroupId"] = new SelectList(_context.Groups, "Id", "Id", applicationUser.GroupId);
             return View(applicationUser);
         }
 
+        // GET: ApplicationUsers/Edit/5
         public async Task<IActionResult> Edit(string id)
         {
             if (id == null)
@@ -87,13 +82,16 @@ namespace WebZhurnal.Controllers
             {
                 return NotFound();
             }
-            ViewData["GroupId"] = new SelectList(_context.Groups, "Id", "Name", applicationUser.GroupId);
+            ViewData["GroupId"] = new SelectList(_context.Groups, "Id", "Id", applicationUser.GroupId);
             return View(applicationUser);
         }
 
+        // POST: ApplicationUsers/Edit/5
+        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
+        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(string id, [Bind("Id,UserName,Email,PhoneNumber,GroupId")]ApplicationUser applicationUser, string type, string name)
+        public async Task<IActionResult> Edit(string id, [Bind("GroupId,Id,UserName,NormalizedUserName,Email,NormalizedEmail,EmailConfirmed,PasswordHash,SecurityStamp,ConcurrencyStamp,PhoneNumber,PhoneNumberConfirmed,TwoFactorEnabled,LockoutEnd,LockoutEnabled,AccessFailedCount")] ApplicationUser applicationUser)
         {
             if (id != applicationUser.Id)
             {
@@ -104,12 +102,6 @@ namespace WebZhurnal.Controllers
             {
                 try
                 {
-                    var identityClaim = new IdentityUserClaim<string> { ClaimType = "Type", ClaimValue = type };
-                    if(!applicationUser.Claims.Any(c=>c.ClaimType==identityClaim.ClaimType&&c.ClaimValue==identityClaim.ClaimValue))
-                        applicationUser.Claims.Add(identityClaim);
-                    var nameClaim = new IdentityUserClaim<string> { ClaimType = "Name", ClaimValue = name };
-                    if (!applicationUser.Claims.Any(c => c.ClaimType == nameClaim.ClaimType && c.ClaimValue == nameClaim.ClaimValue))
-                        applicationUser.Claims.Add(nameClaim);
                     _context.Update(applicationUser);
                     await _context.SaveChangesAsync();
                 }
@@ -126,10 +118,11 @@ namespace WebZhurnal.Controllers
                 }
                 return RedirectToAction("Index");
             }
-            ViewData["GroupId"] = new SelectList(_context.Groups, "Id", "Name", applicationUser.GroupId);
+            ViewData["GroupId"] = new SelectList(_context.Groups, "Id", "Id", applicationUser.GroupId);
             return View(applicationUser);
         }
 
+        // GET: ApplicationUsers/Delete/5
         public async Task<IActionResult> Delete(string id)
         {
             if (id == null)
@@ -138,6 +131,7 @@ namespace WebZhurnal.Controllers
             }
 
             var applicationUser = await _context.ApplicationUser
+                .Include(a => a.Group)
                 .SingleOrDefaultAsync(m => m.Id == id);
             if (applicationUser == null)
             {
@@ -147,6 +141,7 @@ namespace WebZhurnal.Controllers
             return View(applicationUser);
         }
 
+        // POST: ApplicationUsers/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(string id)

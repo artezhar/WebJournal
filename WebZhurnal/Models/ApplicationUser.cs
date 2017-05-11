@@ -9,13 +9,7 @@ namespace WebZhurnal.Models
     // Add profile data for application users by adding properties to the ApplicationUser class
     public class ApplicationUser : IdentityUser
     {
-        private void test()
-
-        {
-
-        }
-
-
-        
+        public Group Group { get; set; }
+        public int? GroupId { get; set; }
     }
 }

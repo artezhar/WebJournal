@@ -18,13 +18,21 @@ namespace WebZhurnal.Data
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
-            // Customize the ASP.NET Identity model and override the defaults if needed.
-            // For example, you can rename the ASP.NET Identity table names and more.
-            // Add your customizations after calling base.OnModelCreating(builder);
+
+            builder.Entity<MaterialGroup>().HasOne(mg => mg.Material).WithMany(mg => mg.MaterialGroups).HasForeignKey(mg => mg.MaterialId);
+            builder.Entity<MaterialGroup>().HasOne(mg => mg.Group).WithMany(mg => mg.MaterialGroups).HasForeignKey(mg => mg.GroupId);
+            builder.Entity<MaterialGroup>().HasKey(mg => new { mg.GroupId, mg.MaterialId });
+            
+            builder.Entity<Material>().HasOne(mat => mat.Subject).WithMany(s => s.Materials).HasForeignKey(mat => mat.SubjectId).IsRequired(false);
+            builder.Entity<ApplicationUser>().HasOne(u => u.Group).WithMany(s => s.Users).HasForeignKey(mat => mat.GroupId).IsRequired(false);
+
+
         }
 
         public DbSet<Subject> Subjects { get; set; }
+        public DbSet<Group> Groups { get; set; }
         public DbSet<StudentRate> Rates { get; set; }
         public DbSet<WebZhurnal.Models.ApplicationUser> ApplicationUser { get; set; }
+        public DbSet<Material> Materials { get; set; }
     }
 }

@@ -8,9 +8,10 @@ using WebZhurnal.Data;
 namespace WebZhurnal.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20170511211611_migr4")]
+    partial class migr4
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
             modelBuilder
                 .HasAnnotation("ProductVersion", "1.1.1")
@@ -138,8 +139,6 @@ namespace WebZhurnal.Data.Migrations
 
                     b.Property<bool>("EmailConfirmed");
 
-                    b.Property<int?>("GroupId");
-
                     b.Property<bool>("LockoutEnabled");
 
                     b.Property<DateTimeOffset?>("LockoutEnd");
@@ -164,8 +163,6 @@ namespace WebZhurnal.Data.Migrations
                         .HasMaxLength(256);
 
                     b.HasKey("Id");
-
-                    b.HasIndex("GroupId");
 
                     b.HasIndex("NormalizedEmail")
                         .HasName("EmailIndex");
@@ -262,6 +259,19 @@ namespace WebZhurnal.Data.Migrations
                     b.ToTable("Subjects");
                 });
 
+            modelBuilder.Entity("WebZhurnal.Models.UserGroup", b =>
+                {
+                    b.Property<int>("GroupId");
+
+                    b.Property<string>("UserId");
+
+                    b.HasKey("GroupId", "UserId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("UserGroup");
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.EntityFrameworkCore.IdentityRoleClaim<string>", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.EntityFrameworkCore.IdentityRole")
@@ -299,13 +309,6 @@ namespace WebZhurnal.Data.Migrations
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
-            modelBuilder.Entity("WebZhurnal.Models.ApplicationUser", b =>
-                {
-                    b.HasOne("WebZhurnal.Models.Group", "Group")
-                        .WithMany("Users")
-                        .HasForeignKey("GroupId");
-                });
-
             modelBuilder.Entity("WebZhurnal.Models.Material", b =>
                 {
                     b.HasOne("WebZhurnal.Models.Subject", "Subject")
@@ -340,6 +343,19 @@ namespace WebZhurnal.Data.Migrations
                     b.HasOne("WebZhurnal.Models.ApplicationUser", "Teacher")
                         .WithMany()
                         .HasForeignKey("TeacherId");
+                });
+
+            modelBuilder.Entity("WebZhurnal.Models.UserGroup", b =>
+                {
+                    b.HasOne("WebZhurnal.Models.Group", "Group")
+                        .WithMany("UserGroups")
+                        .HasForeignKey("GroupId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("WebZhurnal.Models.ApplicationUser", "User")
+                        .WithMany("UserGroups")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
         }
     }
