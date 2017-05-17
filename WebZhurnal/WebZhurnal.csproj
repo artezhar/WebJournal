@@ -1,7 +1,20 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
+  <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <OutputType>exe</OutputType>
+   
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x86'" Label="Configuration">
+    <OutputType>exe</OutputType>
+  </PropertyGroup>
+
   <PropertyGroup>
     <TargetFramework>netcoreapp1.1</TargetFramework>
+  </PropertyGroup>
+  
+  <PropertyGroup>
+    <RuntimeIdentifier>win7-x86</RuntimeIdentifier>
   </PropertyGroup>
 
   <PropertyGroup>
@@ -10,15 +23,23 @@
 
   <PropertyGroup>
     <UserSecretsId>aspnet-WebZhurnal-d12b0291-b3d3-4e22-bd67-98d34e8a0e8e</UserSecretsId>
+    <ApplicationIcon />
+    <OutputTypeEx>exe</OutputTypeEx>
+    <StartupObject />
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <Prefer32Bit>False</Prefer32Bit>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x86'">
+    <Prefer32Bit>False</Prefer32Bit>
   </PropertyGroup>
 
   <ItemGroup>
     <Content Remove="wwwroot/js\mvc-grid.js" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Content Include="wwwroot\js\mvc-grid.js" />
-  </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.0.0" />
     <PackageReference Include="Microsoft.AspNetCore" Version="1.1.1" />
