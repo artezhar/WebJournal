@@ -1,18 +1,18 @@
-@model WebZhurnal.Models.Group
+﻿@model WebZhurnal.Models.Group
 
 @{
     ViewData["Title"] = "Create";
 }
 
-<h2>Create</h2>
+<br />
+<h4>Добавить группу </h4>
 
 <form asp-action="Create">
     <div class="form-horizontal">
-        <h4>Group</h4>
         <hr />
         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
         <div class="form-group">
-            <label asp-for="Name" class="col-md-2 control-label"></label>
+            <label asp-for="Name" class="col-md-2 control-label">Название</label>
             <div class="col-md-10">
                 <input asp-for="Name" class="form-control" />
                 <span asp-validation-for="Name" class="text-danger"></span>
@@ -20,13 +20,13 @@
         </div>
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Create" class="btn btn-default" />
+                <input type="submit" value="Создать" class="btn btn-default" />
             </div>
         </div>
     </div>
 </form>
 
 <div>
-    <a asp-action="Index">Back to List</a>
-</div>
+    <a asp-action="Index">Назад к списку</a>
+    </div>
 

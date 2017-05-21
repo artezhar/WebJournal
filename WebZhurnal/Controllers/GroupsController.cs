@@ -40,6 +40,8 @@ namespace WebZhurnal.Controllers
                 return NotFound();
             }
 
+            ViewBag.Users = _context.Users.Include(u=>u.Claims).Where(u => u.GroupId == id);
+
             return View(@group);
         }
 

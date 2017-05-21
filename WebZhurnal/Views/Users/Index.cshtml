@@ -6,9 +6,22 @@
 
 <h2>Пользователи</h2>
 
-<p>
-    <a asp-action="Create">Добавить нового</a>
-</p>
+<div class="row">
+    <div class="col-md-2"> <a asp-action="Create">Добавить нового</a></div>
+    <div class="col-md-1"></div>
+    <div class="col-md-9">
+    <form method="post" asp-action="ImportUsers"  asp-controller="Excel" class="row" enctype="multipart/form-data">
+
+        <div class="col-xs-5" >
+            <img src="~/images/file_upload_icon.png" width="16" />
+            <strong>Импорт из Excel</strong>
+            <input type="file" name="excelFile" accept=".xlsx" />
+        </div>
+        <div class="col-xs-7"><button class="btn btn-submit">Далее</button></div>
+    </form>
+    </div>
+</div>
+<hr />
 <table class="table">
     <thead>
         <tr>
@@ -24,9 +37,7 @@
             <th>
                 Телефон
             </th>
-            <th>
-                Неудачных попыток входа
-            </th>
+           
             <th></th>
         </tr>
     </thead>
@@ -46,12 +57,9 @@
                 <td>
                     @Html.DisplayFor(modelItem => item.PhoneNumber)
                 </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.AccessFailedCount)
-                </td>
+               
                 <td>
                     <a asp-action="Edit" asp-route-id="@item.Id">Редактировать</a> |
-                    <a asp-action="Details" asp-route-id="@item.Id">Подробности</a> |
                     <a asp-action="Delete" asp-route-id="@item.Id">Удалить</a>
                 </td>
             </tr>

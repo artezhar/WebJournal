@@ -8,7 +8,13 @@
     
     if ($(element).val() === 'Student') {
         $('#sGroupId').removeAttr('disabled', '');
-        $('#sSubject').attr('disabled', '');
+        $('#sSubject').attr('disabled', 'disabled');
+        $('#sSubject').val('');
         return;
     }
+
+    $('#sGroupId').attr('disabled', 'disabled');
+    $('#sSubject').attr('disabled', 'disabled');
+    $('#sGroupId').val('');
+    $('#sSubject').val('');
 }

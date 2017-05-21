@@ -1,0 +1,78 @@
+﻿@model List<string>
+@{
+    ViewData["Title"] = "Импорт пользователей";
+    List<List<string>> Rows = (List<List<string>>)ViewBag.ExcelRows;
+}
+
+<h3>@ViewData["Title"]</h3>
+<hr />
+<h5>Укажите какая информация в каких столбцах</h5>
+
+<style>
+    .table-preview {
+        max-height: 500px;
+        -webkit-box-shadow: inset 0px -200px 159px -142px rgba(255,255,255,1);
+        -moz-box-shadow: inset 0px -200px 159px -142px rgba(255,255,255,1);
+        box-shadow: inset 0px -200px 159px -142px rgba(255,255,255,1);
+    }
+    .table-preview thead tr td {
+        border-top-width:0;
+       border-bottom-width:8px;
+    }
+        .table-preview thead tr th {
+            border-bottom-width: 0px;
+        }
+</style>
+
+<form method="post" asp-action="DoImportUsers">
+    <input type="hidden" value="@ViewBag.FileId" name="fileId">
+    <table class="table table-bordered table-preview">
+        <thead>
+            <tr>
+                @for (int i = 0; i < Model.Count; i++)
+                {
+                    <td>
+                        В этом столбце
+                        <select name="columns[@i]" class="form-control">
+                            <option value="">Ничего</option>
+                            <option value="NameColumn">Имя</option>
+                            <option value="TypeColumn">Тип</option>
+                            <option value="PhoneNumberColumn">Телефон</option>
+                            <option value="GroupColumn">Группа</option>
+                            <option value="LoginColumn">Логин</option>
+                        </select>
+                    </td>
+                }
+            </tr>
+        </thead>
+        <tbody>
+            @foreach(var row in Rows )
+            {
+                <tr>
+                    @foreach (var cell in row)
+                    {
+                        <td>
+                            @cell
+                        </td>
+                    }
+                </tr>
+            }
+        </tbody>
+    </table>
+    <div class="pull-right">
+        <label for="defautlType">Установить для всех тип</label>
+        <select class="form-control" name="defaultType" id="defaultType">
+            <option value=""> Как в таблице</option>
+            
+            <option value="Student">Ученик</option>
+            <option value="Teacher">Учитель</option>
+            <option value="Group">Группа</option>
+        </select>
+        <br />
+        <label for="startRow">Начиная со строки</label>
+        <input type="number" name="startRow" id="startRow" value="1" style="width:40px"/>
+        <button class="btn">Импорт</button>
+    </div>
+    <div class="clearfix"></div>
+  
+</form>

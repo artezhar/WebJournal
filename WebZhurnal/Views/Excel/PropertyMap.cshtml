@@ -1,0 +1,26 @@
+@model PropertyMap
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h3>Excel файлы в системе</h3>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Дата загрузки</th>
+            <th>Имя файла</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach(FileModel file in Model)
+        {
+            <tr>
+                <td>@file.DateTimeUploaded</td>
+                <td>@file.Name</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
