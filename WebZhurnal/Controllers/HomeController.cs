@@ -61,7 +61,9 @@ namespace WebZhurnal.Controllers
         {
             var model = new StudentRateModel();
             model.CurrentUserId= (await userManager.GetUserAsync(HttpContext.User)).Id;
-            model.Students = dbContext.Users.Include(u=>u.Claims).Where(u => u.Claims.Any(c => c.ClaimType == "Type" && c.ClaimValue == "Student")).ToList();
+            model.Students = dbContext.Users.Include(u=>u.Claims).Include(u=>u.Group).Where(u => u.Claims.Any(c => c.ClaimType == "Type" && c.ClaimValue == "Student")).ToList();
+
+            if (User.Claims.Any(c => (c.Type == "Type") && (c.Value == "Group"))) model.Students = model.Students.Where(u => u.Group!=null&& u.Group.Name == User.Identity.Name).ToList();
             
             model.Subjects = dbContext.Subjects.ToList();
             model.Rates = dbContext.Rates.ToList();

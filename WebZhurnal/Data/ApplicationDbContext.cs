@@ -32,7 +32,6 @@ namespace WebZhurnal.Data
         public DbSet<Subject> Subjects { get; set; }
         public DbSet<Group> Groups { get; set; }
         public DbSet<StudentRate> Rates { get; set; }
-        public DbSet<WebZhurnal.Models.ApplicationUser> ApplicationUser { get; set; }
         public DbSet<Material> Materials { get; set; }
 
         public DbSet<FileModel> Files { get; set; }

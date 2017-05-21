@@ -1,0 +1,25 @@
+﻿@model WebZhurnal.Models.Group
+
+@{
+    ViewData["Title"] = "Details";
+    IEnumerable<ApplicationUser> Users = (IEnumerable<ApplicationUser>)ViewBag.Users;
+}
+
+<br />
+<h4>Группа @Model.Name</h4>
+
+<table>
+    <tbody>
+        @foreach (var user in Users)
+        {
+            <tr>
+                <td>@user.UserName</td>
+                <td>@(user.Claims.FirstOrDefault(c => c.ClaimType == "Name")?.ClaimValue?.Translate())</td>
+            </tr>
+        }
+    </tbody>
+</table>
+<div>
+    <a asp-action="Edit" asp-route-id="@Model.Id">Править</a> |
+    <a asp-action="Index">Назад</a>
+</div>
