@@ -45,13 +45,13 @@ namespace WebZhurnal.Controllers
                     user.Claims.Add(nameClaim);
                     await _userManager.UpdateAsync(user);
                 }
-                catch
+                catch(Exception e)
                 {
-                    return BadRequest();
+                    return Content(e.Message);
                 }
                 return Ok();
             }
-            return BadRequest();
+            return Content(result.ToString());
         }
         public async Task<IActionResult> AddStudent(string login, string name, string email, string password="`1qw23E")
         {
