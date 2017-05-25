@@ -15,12 +15,7 @@ namespace WebZhurnal.Models
         public List<List<string>> GetRows(int max=1000)
         {
             List<List<string>> result = new List<List<string>>();
-
-            //var properties = typeof(T).GetProperties().Select(p=>p.Name);
-            //Dictionary<string, int> PropertyMap = new Dictionary<string, int>();
-
             ExcelWorksheet workSheet = package.Workbook.Worksheets[1];
-
             for (int i = workSheet.Dimension.Start.Row;
                 i <= Math.Min(workSheet.Dimension.End.Row, max);
                 i++)
@@ -36,12 +31,6 @@ namespace WebZhurnal.Models
              return result;
         }
 
-
-        public ExcelManager(string path)
-        {
-            package = new ExcelPackage(new FileInfo(path));
-        }
-
         public List<string> GetRow(int i)
         {
             ExcelWorksheet workSheet = package.Workbook.Worksheets[1];
@@ -54,6 +43,12 @@ namespace WebZhurnal.Models
             }
             return result;
         }
+
+        public ExcelManager(string path)
+        {
+            package = new ExcelPackage(new FileInfo(path));
+        }
+
 
     }
 }
