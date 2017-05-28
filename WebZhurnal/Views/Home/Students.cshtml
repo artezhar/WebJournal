@@ -82,7 +82,11 @@ isGroup ? Model.Students
 
 <div id="alertok" style="position:fixed; top:50%; left:48%; display:none" class="alert alert-success">Оценка записана!</div>
 <div id="alerterr" style="position:fixed; top:50%; left:48%; display:none" class="alert alert-success">Упс..</div>
+<link href="~/lib/datatables.net-bs/css/dataTables.bootstrap.css" rel="stylesheet" />
+
 @section Scripts{
+<script src="~/lib/datatables.net/js/jquery.dataTables.js"></script>
+<script src="~/lib/datatables.net-bs/js/dataTables.bootstrap.js"></script>
     <script>
         $('table').on('focus', '[contenteditable]', function () {
             var $this = $(this);
@@ -103,6 +107,10 @@ isGroup ? Model.Students
                 });
             }
             return $this;
+            });
+        $('table').dataTable({
+            "lengthChange": false, "paging": false, "info": false,
+            "searching":false
         });
     </script>
 }
