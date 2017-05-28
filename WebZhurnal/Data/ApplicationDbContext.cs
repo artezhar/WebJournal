@@ -24,6 +24,10 @@ namespace WebZhurnal.Data
             builder.Entity<MaterialGroup>().HasKey(mg => new { mg.GroupId, mg.MaterialId });
             builder.Entity<Material>().HasOne(mat => mat.Subject).WithMany(s => s.Materials).HasForeignKey(mat => mat.SubjectId).IsRequired(false);
             builder.Entity<ApplicationUser>().HasOne(u => u.Group).WithMany(s => s.Users).HasForeignKey(mat => mat.GroupId).IsRequired(false);
+
+            builder.Entity<TeacherGroup>().HasOne(tg => tg.Teacher).WithMany(tg => tg.TeacherGroups).HasForeignKey(tg => tg.TeacherId);
+            builder.Entity<TeacherGroup>().HasOne(tg => tg.Group).WithMany(tg => tg.TeacherGroups).HasForeignKey(tg => tg.GroupId);
+            builder.Entity<TeacherGroup>().HasKey(tg => new { tg.GroupId, tg.TeacherId });
         }
 
         public DbSet<Subject> Subjects { get; set; }

@@ -23,5 +23,7 @@ namespace WebZhurnal.Models
         public List<ApplicationUser> Students { get; set; }
         public List<Subject> Subjects { get; set; }
         public List<StudentRate> Rates { get; set; }
+        public List<Group> Groups { get; internal set; }
+        public string CurrentUserName { get; internal set; }
     }
 }

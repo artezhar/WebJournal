@@ -11,5 +11,7 @@ namespace WebZhurnal.Models
     {
         public Group Group { get; set; }
         public int? GroupId { get; set; }
+
+        public List<TeacherGroup> TeacherGroups { get; set; }
     }
 }

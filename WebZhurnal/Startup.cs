@@ -45,7 +45,13 @@ namespace WebZhurnal
                 //options.UseNpgsql("Server=127.0.0.1;Port=5432;Database=zdb;User Id=postgres;Password = postgres;"));
                 options.UseSqlServer("Server=(localdb)\\mssqllocaldb;Database=NewDb;Trusted_Connection=True;"));
 
-            services.AddIdentity<ApplicationUser, IdentityRole>()
+            services.AddIdentity<ApplicationUser, IdentityRole>(opt => {
+                opt.Password.RequireDigit = false;
+                opt.Password.RequireUppercase = false;
+                opt.Password.RequiredLength = 4;
+                opt.Password.RequireNonAlphanumeric = false;
+                opt.Password.RequireLowercase = false;
+            })
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders();
 

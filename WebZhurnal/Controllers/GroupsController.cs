@@ -25,6 +25,26 @@ namespace WebZhurnal.Controllers
             return View(await _context.Groups.ToListAsync());
         }
 
+        public async Task<IActionResult> SetTeachers()
+        {
+            int groupId = int.Parse(Request.Form["GroupId"]);
+            foreach(var teacher in _context.Users.Include(u=>u.TeacherGroups).Where(u => u.Claims.Any(c => (c.ClaimType == "Type") && (c.ClaimValue == "Teacher"))))
+            {
+                teacher.TeacherGroups.RemoveAll(tg => tg.GroupId == groupId);
+            }
+            _context.SaveChanges();
+
+            foreach (var teacherId in Request.Form.Where(i=>i.Key!="GroupId").Select(i=>i.Key))
+            {
+                var teacher = await _context.Users.Include(u=>u.TeacherGroups).FirstOrDefaultAsync(u => u.Id == teacherId);
+                if(teacher!=null)
+                    teacher.TeacherGroups.Add(new TeacherGroup() { TeacherId = teacherId, GroupId = groupId });
+            }
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction("Index");
+        }
+
         // GET: Groups/Details/5
         public async Task<IActionResult> Details(int? id)
         {
@@ -33,18 +53,20 @@ namespace WebZhurnal.Controllers
                 return NotFound();
             }
 
-            var @group = await _context.Groups
+            var @group = await _context.Groups.Include(g=>g.TeacherGroups)
                 .SingleOrDefaultAsync(m => m.Id == id);
             if (@group == null)
             {
                 return NotFound();
             }
 
-            ViewBag.Users = _context.Users.Include(u=>u.Claims).Where(u => u.GroupId == id);
+            ViewBag.Users = _context.Users.Include(u => u.Claims).Include(u => u.TeacherGroups).ToList();
+
 
             return View(@group);
         }
 
+        
         // GET: Groups/Create
         public IActionResult Create()
         {
@@ -80,6 +102,7 @@ namespace WebZhurnal.Controllers
             {
                 return NotFound();
             }
+            ViewBag.Users = _context.Users.Include(u => u.Claims).Include(u => u.TeacherGroups).ToList();
             return View(@group);
         }
 

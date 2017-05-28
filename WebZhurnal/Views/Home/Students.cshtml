@@ -4,8 +4,16 @@
     bool isTeacher = User.Claims.Any(c => (c.Type == "Type") && (c.Value == "Teacher"));
     bool isAdmin = User.Claims.Any(c => (c.Type == "Type") && (c.Value == "Admin"));
     bool isGroup = User.Claims.Any(c => (c.Type == "Type") && (c.Value == "Group"));
+    var groups = Model.Groups;
+    if (isTeacher)
+    {
+        groups.RemoveAll(g => !g.TeacherGroups.Any(tg => tg.TeacherId == Model.CurrentUserId));
+    }
+    if (isGroup)
+    {
+        groups.RemoveAll(g => g.Name != Model.CurrentUserName);
+    }
 }
-
 @*@(Html
         .Grid(Model.Students)
         .Build(columns =>
@@ -25,34 +33,54 @@
         .Pageable()
     )*@
 <h3>Оценки</h3>
-<table class="table table-striped">
-    <thead>
-        <tr>
-            <th>Ученик</th>
-            @foreach (var s in Model.Subjects)
-            {
-                <th>@s.Name</th>
-            }
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var stud in isTeacher||isAdmin? Model.Students:
-            isGroup? Model.Students
-            :Model.Students.Where(s=>s.Id==Model.CurrentUserId))
-        {
-            <tr>
-                <td>@(stud.Claims.FirstOrDefault(c=> c.ClaimType == "Name")?.ClaimValue??stud.UserName)</td>
-                @foreach (var s in Model.Subjects)
-                {
-                    bool mySubject = isAdmin|| User.Claims.Any(c => (c.Type == "Subject") && (c.Value == s.Id.ToString()));
-                    <td @(mySubject?"class=success":"") data-student-id="@stud.Id" data-subject-id="@s.Id" @(mySubject?"contenteditable=true":"")>@Model.Rates.SingleOrDefault(r => r.StudentId == stud.Id && r.SubjectId == s.Id)?.Value</td>
-                }
-            </tr>
+<div>
 
+    <ul class="nav nav-tabs" role="tablist">
+        @foreach (var group in groups)
+        {
+            <li><a href="#grdiv_@group.Id" role="tab" data-toggle="tab">@group.Name</a></li>
         }
-    </tbody>
-</table>
-<div id="alertok" style="position:fixed; top:50%; left:48%; display:none" class="alert alert-success" >Оценка записана!</div>
+    </ul>
+
+    <div class="tab-content">
+        @foreach (var group in groups)
+            {
+            <div role="tabpanel" class="tab-pane" id="grdiv_@group.Id">
+
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Ученик</th>
+                            @foreach (var s in Model.Subjects)
+                {
+                                <th>@s.Name</th>
+                            }
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var stud in (isTeacher || isAdmin ? Model.Students :
+isGroup ? Model.Students
+: Model.Students.Where(s => s.Id == Model.CurrentUserId)).Where(u=>u.GroupId==group.Id))
+                        {
+                            <tr>
+                                <td>@(stud.Claims.FirstOrDefault(c => c.ClaimType == "Name")?.ClaimValue ?? stud.UserName)</td>
+                                @foreach (var s in Model.Subjects)
+                    {
+                        bool mySubject = isAdmin || User.Claims.Any(c => (c.Type == "Subject") && (c.Value == s.Id.ToString()));
+                                    <td @(mySubject ? "class=success" : "") data-student-id="@stud.Id" data-subject-id="@s.Id" @(mySubject ? "contenteditable=true" : "")>@Model.Rates.SingleOrDefault(r => r.StudentId == stud.Id && r.SubjectId == s.Id)?.Value</td>
+                                }
+                            </tr>
+
+                        }
+                    </tbody>
+                </table>
+
+            </div> }
+
+    </div>
+</div>
+
+<div id="alertok" style="position:fixed; top:50%; left:48%; display:none" class="alert alert-success">Оценка записана!</div>
 <div id="alerterr" style="position:fixed; top:50%; left:48%; display:none" class="alert alert-success">Упс..</div>
 @section Scripts{
     <script>

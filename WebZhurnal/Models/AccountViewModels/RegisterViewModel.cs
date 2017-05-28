@@ -23,7 +23,7 @@ namespace WebZhurnal.Models.AccountViewModels
 
 
         [Required]
-        [StringLength(100, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 6)]
+        [StringLength(100, ErrorMessage = "Пароль должен состоять хот бы из {2} символов", MinimumLength = 4)]
         [DataType(DataType.Password)]
         [Display(Name = "Пароль")]
         public string Password { get; set; }
@@ -40,6 +40,9 @@ namespace WebZhurnal.Models.AccountViewModels
 
         [Display(Name ="Предмет")]
         public string Subject { get; set; }
+
+        [Display(Name = "Группа")]
+        public string Group { get; set; }
 
     }
 }
