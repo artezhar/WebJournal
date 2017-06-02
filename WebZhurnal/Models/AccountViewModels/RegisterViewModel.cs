@@ -41,7 +41,7 @@ namespace WebZhurnal.Models.AccountViewModels
         [Display(Name ="Предмет")]
         public string Subject { get; set; }
 
-        [Display(Name = "Группа")]
+        [Display(Name = "Класс")]
         public string Group { get; set; }
 
     }

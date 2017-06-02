@@ -13,5 +13,7 @@ namespace WebZhurnal.Models
         public int? GroupId { get; set; }
 
         public List<TeacherGroup> TeacherGroups { get; set; }
+
+        public string Name => Claims.FirstOrDefault(c => c.ClaimType == "Name")?.ClaimValue?.Translate();
     }
 }

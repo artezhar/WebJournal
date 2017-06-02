@@ -43,14 +43,18 @@ namespace WebZhurnal.Controllers
         public async Task<IActionResult> SetRate(string studentId, int subjectId, int value)
         {
             var rate = dbContext.Rates.FirstOrDefault(r => r.StudentId == studentId && r.SubjectId == subjectId);
-            var id = (await userManager.GetUserAsync(HttpContext.User)).Id;
+            var teacher = await userManager.GetUserAsync(HttpContext.User);
+            var student = dbContext.Users.Include(u => u.Claims).Single(u => u.Id == studentId);
+            var subject = dbContext.Subjects.Single(s => s.Id == subjectId);
             if (rate == null)
             {
                 rate = new StudentRate() { StudentId = studentId, SubjectId = subjectId, Value = value };
-                rate.TeacherId = id;
+                rate.TeacherId = teacher.Id;
                 dbContext.Add(rate);
             }
-            else { rate.Value = value; rate.TeacherId = id; }
+            else { rate.Value = value; rate.TeacherId = teacher.Id; }
+            var rateItem = new RateItem() { Type = LogItemType.Rate, DateTime = DateTime.Now, Teacher = teacher.Name, Student = student.Name, Rate = value, Subject=subject.Name };
+            dbContext.LogItems.Add(rateItem);
             dbContext.SaveChanges();
             return Ok();           
         }

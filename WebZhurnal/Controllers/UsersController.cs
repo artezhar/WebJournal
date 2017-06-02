@@ -26,7 +26,7 @@ namespace WebZhurnal.Controllers
 
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Users.Include(u=>u.Claims). ToListAsync());
+            return View(await _context.Users.Include(u=>u.Claims).Include(u=>u.Group). ToListAsync());
         }
 
        
@@ -40,7 +40,7 @@ namespace WebZhurnal.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,UserName,Email,PhoneNumber,GroupId")] ApplicationUser applicationUser, string type, string name, string Subject, string password="`1qw23E")
+        public async Task<IActionResult> Create([Bind("Id,UserName,Email,PhoneNumber")] ApplicationUser applicationUser, string type, string name, string Subject, string password="`1qw23E", int GroupId=0)
         {
             if (ModelState.IsValid)
             {
@@ -88,7 +88,7 @@ namespace WebZhurnal.Controllers
                 return NotFound();
             }
 
-            var applicationUser = await _context.Users.Include(u=>u.Claims).SingleOrDefaultAsync(m => m.Id == id);
+            var applicationUser = await _context.Users.Include(u=>u.Claims).Include(u => u.Group).SingleOrDefaultAsync(m => m.Id == id);
             if (applicationUser == null)
             {
                 return NotFound();
@@ -99,7 +99,7 @@ namespace WebZhurnal.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(string id, [Bind("Id,UserName,Email,PhoneNumber,GroupId")]ApplicationUser applicationUser, string type, string name, string Subject)
+        public async Task<IActionResult> Edit(string id, [Bind("Id,UserName,Email,PhoneNumber")]ApplicationUser applicationUser, string type, string name, string Subject, int GroupId = 0)
         {
             if (id != applicationUser.Id)
             {
@@ -127,8 +127,16 @@ namespace WebZhurnal.Controllers
                             applicationUser.Claims.Add(subjectClaim);
                         }
                     }
-
                     await _userManager.UpdateAsync(applicationUser);
+                    if (GroupId != 0)
+                    {
+                       var susr= _context.Users.Include(u=>u.Group).Single(u => u.Id == applicationUser.Id);
+                        susr.GroupId = GroupId;
+                        _context.SaveChanges();
+                    }
+
+
+                    
                 }
                 catch (DbUpdateConcurrencyException)
                 {

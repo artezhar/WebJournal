@@ -35,5 +35,6 @@ namespace WebZhurnal.Data
         public DbSet<StudentRate> Rates { get; set; }
         public DbSet<Material> Materials { get; set; }
         public DbSet<FileModel> Files { get; set; }
+        public DbSet<RateItem> LogItems { get; set; }
     }
 }

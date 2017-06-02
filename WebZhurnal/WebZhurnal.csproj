@@ -35,6 +35,14 @@
 
   <ItemGroup>
     <Content Remove="wwwroot/js\mvc-grid.js" />
+    <Content Remove="wwwroot/lib\bootstrap\dist\css\bootstrap-theme.css" />
+    <Content Remove="wwwroot/lib\bootstrap\dist\css\bootstrap-theme.css.map" />
+    <Content Remove="wwwroot/lib\bootstrap\dist\css\bootstrap-theme.min.css" />
+    <Content Remove="wwwroot/lib\bootstrap\dist\css\bootstrap-theme.min.css.map" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="wwwroot\lib\bootstrap\dist\css\bootstrap.min.css" />
   </ItemGroup>
 
   <ItemGroup>

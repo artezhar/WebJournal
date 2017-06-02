@@ -9,9 +9,10 @@ using WebZhurnal.Models;
 namespace WebZhurnal.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20170602210810_migr12")]
+    partial class migr12
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
             modelBuilder
                 .HasAnnotation("ProductVersion", "1.1.1")
@@ -206,6 +207,20 @@ namespace WebZhurnal.Data.Migrations
                     b.ToTable("Groups");
                 });
 
+            modelBuilder.Entity("WebZhurnal.Models.LogItem", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<DateTime>("DateTime");
+
+                    b.Property<int>("Type");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("LogItems");
+                });
+
             modelBuilder.Entity("WebZhurnal.Models.Material", b =>
                 {
                     b.Property<int>("Id")
@@ -241,28 +256,6 @@ namespace WebZhurnal.Data.Migrations
                     b.HasIndex("MaterialId");
 
                     b.ToTable("MaterialGroup");
-                });
-
-            modelBuilder.Entity("WebZhurnal.Models.RateItem", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<DateTime>("DateTime");
-
-                    b.Property<int>("Rate");
-
-                    b.Property<string>("Student");
-
-                    b.Property<string>("Subject");
-
-                    b.Property<string>("Teacher");
-
-                    b.Property<int>("Type");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("LogItems");
                 });
 
             modelBuilder.Entity("WebZhurnal.Models.StudentRate", b =>

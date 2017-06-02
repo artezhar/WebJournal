@@ -16,7 +16,7 @@
                 <select onchange="utChange(this)" name="type" class="form-control">
                     <option value="Student">Ученик</option>
                     <option value="Teacher">Учитель</option>
-                    <option value="Group">Группа</option>
+                    <option value="Group">Класс</option>
                 </select>
 
             </div>
@@ -29,7 +29,7 @@
         </div>
 
         <div class="form-group">
-            <label asp-for="GroupId" class="col-md-2 control-label">Группа</label>
+            <label asp-for="GroupId" class="col-md-2 control-label">Класс</label>
             <div class="col-md-10">
                 <select asp-for="GroupId" id="sGroupId" class="form-control" asp-items="ViewBag.GroupId"></select>
             </div>

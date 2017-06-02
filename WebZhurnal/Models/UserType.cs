@@ -10,7 +10,7 @@ namespace WebZhurnal.Models
         Student,
              [Display(Name = "Администратор")]
         Admin,
-             [Display(Name = "Группа")]
+             [Display(Name = "Класс")]
         Group
     }
 
@@ -22,7 +22,7 @@ namespace WebZhurnal.Models
             {
                 case "Teacher": return "Учитель";
                 case "Student": return "Ученик";
-                case "Group": return "Группа";
+                case "Group": return "Класс";
                 case "Admin": return "Администратор";
             }
             return s;

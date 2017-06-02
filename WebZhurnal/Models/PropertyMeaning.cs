@@ -16,7 +16,7 @@ namespace WebZhurnal.Models
             _meanings = new Dictionary<string, Dictionary<string, string>>();
             _meanings.Add("ApplicationUser", new Dictionary<string, string>()
             {
-                { "GroupId", "Номер группы" }
+                { "GroupId", "Номер Классы" }
             });
         }
 

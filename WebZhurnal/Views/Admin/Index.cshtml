@@ -3,9 +3,7 @@
     ViewData["Title"] = "Index";
 }
 
-<br />
-<h2>Администрирование</h2>
-
+<br /><br /><br /><br />
 <style>
     .abtn {
         width: 100%;
@@ -32,13 +30,25 @@
     </div>
     <div class="col-md-4">
         <a class="abtn bg-warning" asp-controller="Groups">
-            <span>Группы</span>
+            <span>Классы</span>
         </a>
     </div>
     <div class="col-md-4">
         <a class="abtn bg-success" asp-controller="Subjects">
             <span>Предметы</span>
         </a>
+    </div>
+</div>
+<br />
+<div class="row">
+    <div class="col-md-2">
+    </div>
+    <div class="col-md-8">
+        <a class="abtn" style="height:100px; line-height:100px; background-color:rgba(81, 211, 203, 0.52)" asp-controller="Log" asp-action="Rates">
+            <span>История отметок</span>
+        </a>
+    </div>
+    <div class="col-md-2">
     </div>
 </div>
 
