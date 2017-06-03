@@ -26,10 +26,10 @@ namespace WebZhurnal.Controllers
 
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Users.Include(u=>u.Claims).Include(u=>u.Group). ToListAsync());
+            return View(await _context.Users.Include(u => u.Claims).Include(u => u.Group).ToListAsync());
         }
 
-       
+
 
         public IActionResult Create()
         {
@@ -40,11 +40,11 @@ namespace WebZhurnal.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,UserName,Email,PhoneNumber")] ApplicationUser applicationUser, string type, string name, string Subject, string password="`1qw23E", int GroupId=0)
+        public async Task<IActionResult> Create([Bind("Id,UserName,Email,PhoneNumber")] ApplicationUser applicationUser, string type, string name, string Subject, string password = "`1qw23E", int GroupId = 0)
         {
             if (ModelState.IsValid)
             {
-               
+
                 try
                 {
                     var identityClaim = new IdentityUserClaim<string> { ClaimType = "Type", ClaimValue = type };
@@ -52,7 +52,7 @@ namespace WebZhurnal.Controllers
                     var nameClaim = new IdentityUserClaim<string> { ClaimType = "Name", ClaimValue = name };
                     applicationUser.Claims.Add(nameClaim);
 
-                    if (!String.IsNullOrWhiteSpace(Subject)&&type=="Teacher")
+                    if (!String.IsNullOrWhiteSpace(Subject) && type == "Teacher")
                     {
                         if (!_context.Subjects.Any(s => s.Name == Subject))
                         {
@@ -77,7 +77,7 @@ namespace WebZhurnal.Controllers
 
                 return RedirectToAction("Index");
             }
-            ViewData["GroupId"] = new SelectList(_context.Groups, "Id", "Name",applicationUser.GroupId);
+            ViewData["GroupId"] = new SelectList(_context.Groups, "Id", "Name", applicationUser.GroupId);
             return View(applicationUser);
         }
 
@@ -88,12 +88,13 @@ namespace WebZhurnal.Controllers
                 return NotFound();
             }
 
-            var applicationUser = await _context.Users.Include(u=>u.Claims).Include(u => u.Group).SingleOrDefaultAsync(m => m.Id == id);
+            var applicationUser = await _context.Users.Include(u => u.Claims).Include(u => u.Group).SingleOrDefaultAsync(m => m.Id == id);
             if (applicationUser == null)
             {
                 return NotFound();
             }
             ViewData["GroupId"] = new SelectList(_context.Groups, "Id", "Name", applicationUser.GroupId);
+            ViewData["Subjects"] = new SelectList(_context.Subjects, "Id", "Name", applicationUser.Subject);
             return View(applicationUser);
         }
 
@@ -110,6 +111,7 @@ namespace WebZhurnal.Controllers
             {
                 try
                 {
+                    applicationUser = _context.Users.FirstOrDefault(u => u.Id == applicationUser.Id);
                     var typeClaim = new IdentityUserClaim<string> { ClaimType = "Type", ClaimValue = type.ToString() };
                     if (applicationUser.Claims.Where(cl => cl.ClaimType == "Type").Count() > 0) applicationUser.Claims.Remove(applicationUser.Claims.First(cl => cl.ClaimType == "Type"));
                     applicationUser.Claims.Add(typeClaim);
@@ -118,11 +120,16 @@ namespace WebZhurnal.Controllers
                     applicationUser.Claims.Add(nameClaim);
                     if (!String.IsNullOrWhiteSpace(Subject) && type == "Teacher")
                     {
-                        if (!_context.Subjects.Any(s => s.Name == Subject))
+                        int sId = 0;
+                        if (int.TryParse(Subject, out sId))
                         {
-                            var newSubject = _context.Subjects.Add(new Subject() { Name = Subject }).Entity;
-                            _context.SaveChanges();
-                            var subjectClaim = new IdentityUserClaim<string>() { ClaimType = "Subject", ClaimValue = newSubject.Id.ToString() };
+                            var subject = _context.Subjects.FirstOrDefault(s => s.Id == sId);
+                            if (subject==null)
+                            {
+                                subject = _context.Subjects.Add(new Subject() { Name = Subject }).Entity;
+                                _context.SaveChanges();
+                            }
+                            var subjectClaim = new IdentityUserClaim<string>() { ClaimType = "Subject", ClaimValue = subject.Id.ToString() };
                             if (applicationUser.Claims.Where(cl => cl.ClaimType == "Subject").Count() > 0) applicationUser.Claims.Remove(applicationUser.Claims.First(cl => cl.ClaimType == "Subject"));
                             applicationUser.Claims.Add(subjectClaim);
                         }
@@ -130,13 +137,13 @@ namespace WebZhurnal.Controllers
                     await _userManager.UpdateAsync(applicationUser);
                     if (GroupId != 0)
                     {
-                       var susr= _context.Users.Include(u=>u.Group).Single(u => u.Id == applicationUser.Id);
+                        var susr = _context.Users.Include(u => u.Group).Single(u => u.Id == applicationUser.Id);
                         susr.GroupId = GroupId;
                         _context.SaveChanges();
                     }
 
 
-                    
+
                 }
                 catch (DbUpdateConcurrencyException)
                 {

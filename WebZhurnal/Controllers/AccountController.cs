@@ -118,8 +118,8 @@ namespace WebZhurnal.Controllers
             if (ModelState.IsValid)
             {
                 var user = new ApplicationUser { UserName = model.UserName, Email = model.Email/*, Type=model.Type*/ };
-               // var rnd = new Random();
-               // user.Id = new Random().NextDouble().ToString();
+                // var rnd = new Random();
+                // user.Id = new Random().NextDouble().ToString();
                 var result = await _userManager.CreateAsync(user, model.Password);
                 if (result.Succeeded)
                 {
@@ -129,19 +129,17 @@ namespace WebZhurnal.Controllers
                     user.Claims.Add(nameClaim);
                     if (!String.IsNullOrWhiteSpace(model.Subject))
                     {
-                        if (!_dbContext.Subjects.Any(s => s.Name == model.Subject))
+                        var subject = _dbContext.Subjects.FirstOrDefault(s => s.Name == model.Subject);
+                        if (subject == null)
                         {
-                            var newSubject =  _dbContext.Subjects.Add(new Subject() { Name = model.Subject }).Entity;
+                            subject = _dbContext.Subjects.Add(new Subject() { Name = model.Subject }).Entity;
                             _dbContext.SaveChanges();
-                            var subjectClaim = new IdentityUserClaim<string>
-                            {
-                                ClaimType = "Subject",
-                                ClaimValue = (newSubject.Id.ToString())
-                            };
-                            user.Claims.Add(subjectClaim);
                         }
-
+                        var subjectClaim = new IdentityUserClaim<string>() { ClaimType = "Subject", ClaimValue = subject.Id.ToString() };
+                        if (user.Claims.Where(cl => cl.ClaimType == "Subject").Count() > 0) user.Claims.Remove(user.Claims.First(cl => cl.ClaimType == "Subject"));
+                        user.Claims.Add(subjectClaim);
                     }
+
                     await _userManager.UpdateAsync(user);
                     await _signInManager.SignInAsync(user, isPersistent: false);
                     _logger.LogInformation(3, "User created a new account with password.");

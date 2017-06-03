@@ -15,6 +15,7 @@ namespace WebZhurnal.Models
         public string TeacherId { get; set; }
         public ApplicationUser Teacher { get; set; }
         public int Value { get; set; }
+        public DateTime Date { get; set; }
     }
 
     public class StudentRateModel

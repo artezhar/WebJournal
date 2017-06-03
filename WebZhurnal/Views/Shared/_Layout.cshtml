@@ -34,7 +34,7 @@
                     <li><a asp-area="" asp-controller="Home" asp-action="Students">Оценки</a></li>
                     @if (User.HasClaim(u => u.Type == "Type" && u.Value == "Teacher"))
                     {
-                        <li><a asp-area="" asp-controller="Home" asp-action="MyStudents">Администрирование</a></li>
+                        <li><a asp-area="" asp-controller="Home" asp-action="MyStudents">Мои ученики</a></li>
                     }
                     @if (User.HasClaim(u => u.Type == "Type" && u.Value == "Admin"))
                     {

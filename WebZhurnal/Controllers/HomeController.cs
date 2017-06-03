@@ -48,7 +48,7 @@ namespace WebZhurnal.Controllers
             var subject = dbContext.Subjects.Single(s => s.Id == subjectId);
             if (rate == null)
             {
-                rate = new StudentRate() { StudentId = studentId, SubjectId = subjectId, Value = value };
+                rate = new StudentRate() { StudentId = studentId, SubjectId = subjectId, Value = value, Date=DateTime.Now };
                 rate.TeacherId = teacher.Id;
                 dbContext.Add(rate);
             }
@@ -78,11 +78,15 @@ namespace WebZhurnal.Controllers
             return View(model);
         }
 
-        public IActionResult MyStudents()
+        public async Task<IActionResult> MyStudents()
         {
-            var students= dbContext.Users.Include(u => u.Claims).ToList().Where(u => u.Type == "Student");
+            var teacher = await userManager.GetUserAsync(HttpContext.User);
+            var students = dbContext.Users.Include(u => u.Claims).ToList()
+                .Where(u => u.Type == "Student" && teacher.TeacherGroups.Select(tg=>tg.GroupId).Contains(u.GroupId.GetValueOrDefault()))
+                .ToList();
             ViewBag.Students = students;
-            ViewBag.Rates = dbContext.Rates.Where(r => students.Select(s => s.Id).Contains(r.StudentId)).ToList();
+            
+            ViewBag.Rates = dbContext.Rates.Where(r => r.TeacherId==teacher.Id&& students.Select(s => s.Id).Contains(r.StudentId)).ToList();
             return View();
         }
 

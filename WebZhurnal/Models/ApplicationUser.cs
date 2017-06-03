@@ -16,5 +16,6 @@ namespace WebZhurnal.Models
 
         public string Name => Claims.FirstOrDefault(c => c.ClaimType == "Name")?.ClaimValue?.Translate();
         public string Type => Claims.FirstOrDefault(c => c.ClaimType == "Type")?.ClaimValue;
+        public string Subject => Claims.FirstOrDefault(c => c.ClaimType == "Subject")?.ClaimValue;
     }
 }

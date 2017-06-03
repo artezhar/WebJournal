@@ -90,7 +90,7 @@ namespace WebZhurnal.Controllers
                     user.UserName = row[j];
                     j = columns.ToList().IndexOf("PhoneNumberColumn");
                     if (j > 0) user.PhoneNumber = row[j];
-                    await _userManager.CreateAsync(user, "`1qw23E");
+                    await _userManager.CreateAsync(user, "12345");
                     for (int i = 0; i < row.Count; i++)
                     {
                         if (String.IsNullOrEmpty(columns[i]))

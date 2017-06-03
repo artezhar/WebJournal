@@ -1,9 +1,30 @@
-
+п»ї
 @{
-    ViewData["Title"] = "Мои ученики";
+    ViewData["Title"] = "РњРѕРё СѓС‡РµРЅРёРєРё";
     List<ApplicationUser> Students = (List<ApplicationUser>)ViewBag.Students;
-    List<Subject> Subjects = (List<Subject>)ViewBag.Subjects;
+    List<StudentRate> Rates = (List<StudentRate>)ViewBag.Rates;
 }
 
-<h3>Мои ученики</h3>
+<h3>РњРѕРё СѓС‡РµРЅРёРєРё</h3>
+<table class="table-striped table">
+    <thead>
+        <tr>
+            <th>РРјСЏ</th>
+            <th>РћС†РµРЅРєР°</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach(var student in Students)
+        {
+            <tr>
+                <td>
+                    @student.Name
+                </td>
+                <td>
+                    @Rates.FirstOrDefault(r=>r.StudentId==student.Id)?.Value
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
 
