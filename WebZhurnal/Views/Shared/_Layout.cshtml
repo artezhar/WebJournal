@@ -32,6 +32,10 @@
                 <ul class="nav navbar-nav">
 
                     <li><a asp-area="" asp-controller="Home" asp-action="Students">Оценки</a></li>
+                    @if (User.HasClaim(u => u.Type == "Type" && u.Value == "Teacher"))
+                    {
+                        <li><a asp-area="" asp-controller="Home" asp-action="MyStudents">Администрирование</a></li>
+                    }
                     @if (User.HasClaim(u => u.Type == "Type" && u.Value == "Admin"))
                     {
                         <li><a asp-area="" asp-controller="Admin" asp-action="Index">Администрирование</a></li>

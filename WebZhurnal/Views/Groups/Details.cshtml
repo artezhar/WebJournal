@@ -3,13 +3,14 @@
 @{
     ViewData["Title"] = "Details";
     List<ApplicationUser> Users = (List<ApplicationUser>)ViewBag.Users;
+    List<Subject> Subjects = (List<Subject>)ViewBag.Subjects;
 }
 
 <br />
-<h4>Класс @Model.Name</h4>
+<h3>Класс @Model.Name</h3>
 <div class="row">
     <div class="col-md-6">
-        <h6>Учителя</h6>
+        <h4 class="pull-right">Учителя</h4>
         <form asp-controller="Groups" asp-action="SetTeachers" method="post" class="form-horizontal">
             <input type="hidden" value="@Model.Id" name="GroupId" />
             @foreach (var user in Users.Where(u => u.Claims.Any(c => (c.ClaimType == "Type") && (c.ClaimValue == "Teacher"))))
@@ -29,7 +30,33 @@
         </form>
     </div>
     <div class="col-md-6">
-        <h6>Ученики</h6>
+        <h4 class="pull-right">Предметы</h4>
+
+        <form asp-controller="Groups" asp-action="SetSubjects" method="post" class="form-horizontal">
+            <input type="hidden" value="@Model.Id" name="GroupId" />
+            @foreach (var subject in Subjects)
+            {
+                <div class="form-group">
+                    <label class="col-md-10 control-label">@subject.Name</label>
+                    <div class="col-md-2">
+                        <div class="checkbox">
+                            <label>
+                                <input type="checkbox" name="@subject.Id" @(Model.SubjectGroups.Any(tg => tg.SubjectId == subject.Id) ? "checked" : "") />
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            }
+            <button class="btn btn-submit pull-right">Назначить предметы</button>
+        </form>
+    </div>
+   
+    
+</div>
+<div class="row">
+    <div class="col-md-3"></div>
+    <div class="col-md-6">
+        <h4 class="pull-right">Ученики</h4>
 
         <table class="table table-striped">
             <thead>

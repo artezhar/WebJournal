@@ -28,6 +28,10 @@ namespace WebZhurnal.Data
             builder.Entity<TeacherGroup>().HasOne(tg => tg.Teacher).WithMany(tg => tg.TeacherGroups).HasForeignKey(tg => tg.TeacherId);
             builder.Entity<TeacherGroup>().HasOne(tg => tg.Group).WithMany(tg => tg.TeacherGroups).HasForeignKey(tg => tg.GroupId);
             builder.Entity<TeacherGroup>().HasKey(tg => new { tg.GroupId, tg.TeacherId });
+
+            builder.Entity<SubjectGroup>().HasOne(tg => tg.Subject).WithMany(tg => tg.SubjectGroups).HasForeignKey(tg => tg.SubjectId);
+            builder.Entity<SubjectGroup>().HasOne(tg => tg.Group).WithMany(tg => tg.SubjectGroups).HasForeignKey(tg => tg.GroupId);
+            builder.Entity<SubjectGroup>().HasKey(tg => new { tg.GroupId, tg.SubjectId});
         }
 
         public DbSet<Subject> Subjects { get; set; }

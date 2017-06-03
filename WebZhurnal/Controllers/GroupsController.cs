@@ -45,6 +45,29 @@ namespace WebZhurnal.Controllers
             return RedirectToAction("Index");
         }
 
+        public async Task<IActionResult> SetSubjects()
+        {
+            int groupId = int.Parse(Request.Form["GroupId"]);
+            foreach (var subject in _context.Subjects.Include(u => u.SubjectGroups))
+            {
+                subject.SubjectGroups.RemoveAll(tg => tg.GroupId == groupId);
+            }
+            _context.SaveChanges();
+
+            foreach (var subjectId in Request.Form.Where(i => i.Key != "GroupId").Select(i => i.Key))
+            {
+                int sId = 0;
+                if (int.TryParse(subjectId, out sId))
+                {
+                    var subject = await _context.Subjects.Include(u => u.SubjectGroups).FirstOrDefaultAsync(u => u.Id == sId);
+                    if (subject != null)
+                        subject.SubjectGroups.Add(new SubjectGroup() { SubjectId = sId, GroupId = groupId });
+                }
+            }
+            await _context.SaveChangesAsync();
+            return RedirectToAction("Index");
+        }
+
         // GET: Groups/Details/5
         public async Task<IActionResult> Details(int? id)
         {
@@ -53,7 +76,7 @@ namespace WebZhurnal.Controllers
                 return NotFound();
             }
 
-            var @group = await _context.Groups.Include(g=>g.TeacherGroups)
+            var @group = await _context.Groups.Include(g=>g.TeacherGroups).Include(g=>g.SubjectGroups)
                 .SingleOrDefaultAsync(m => m.Id == id);
             if (@group == null)
             {
@@ -61,6 +84,7 @@ namespace WebZhurnal.Controllers
             }
 
             ViewBag.Users = _context.Users.Include(u => u.Claims).Include(u => u.TeacherGroups).ToList();
+            ViewBag.Subjects = _context.Subjects.Include(s=>s.SubjectGroups).ToList();
 
 
             return View(@group);

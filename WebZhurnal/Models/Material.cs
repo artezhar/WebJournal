@@ -25,6 +25,7 @@ namespace WebZhurnal.Models
         public List<ApplicationUser> Users { get; set; }
         public List<MaterialGroup> MaterialGroups { get; set; }
         public List<TeacherGroup> TeacherGroups { get; set; }
+        public List<SubjectGroup> SubjectGroups { get; set; }
     }
 
     public class MaterialGroup
@@ -45,5 +46,14 @@ namespace WebZhurnal.Models
         public Group Group { get; set; }
     }
 
-    
+    public class SubjectGroup
+    {
+        public int SubjectId { get; set; }
+        public int GroupId { get; set; }
+
+        public Subject Subject { get; set; }
+        public Group Group { get; set; }
+    }
+
+
 }

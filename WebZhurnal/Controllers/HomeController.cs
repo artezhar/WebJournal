@@ -78,6 +78,14 @@ namespace WebZhurnal.Controllers
             return View(model);
         }
 
+        public IActionResult MyStudents()
+        {
+            var students= dbContext.Users.Include(u => u.Claims).ToList().Where(u => u.Type == "Student");
+            ViewBag.Students = students;
+            ViewBag.Rates = dbContext.Rates.Where(r => students.Select(s => s.Id).Contains(r.StudentId)).ToList();
+            return View();
+        }
+
         public IActionResult Error()
         {
             return View();
