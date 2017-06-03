@@ -1,0 +1,45 @@
+﻿@model IEnumerable<WebZhurnal.Models.RateItem>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h2>История оценок</h2>
+
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th style="width:160px;">
+                Дата
+            </th>
+            <th style="width:80px;"></th>
+            <th style="width:180px;">
+                Учитель
+            </th>
+            <th style="width:80px;"></th>
+            <th style="width:80px;">Оценка</th>
+            <th style="width:80px;"></th>
+            <th style="width:150px;">Ученик</th>
+            <th style="width:100px;"></th>
+            <th>Предмет</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model) {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.DateTime)
+                </td>
+                <td>учитель</td>
+                <td>@(item.Teacher??"<неизвестен>")</td>
+                <td>поставил</td>
+                <td><strong>@item.Rate</strong></td>
+                <td>ученику</td>
+                <td>@item.Student</td>
+                <td>по предмету</td>
+                <td>@item.Subject</td>
+            </tr>
+}
+    </tbody>
+</table>
