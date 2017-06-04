@@ -81,7 +81,7 @@ namespace WebZhurnal.Controllers
         public async Task<IActionResult> MyStudents()
         {
             var teacher = await userManager.GetUserAsync(HttpContext.User);
-            var students = dbContext.Users.Include(u => u.Claims).ToList()
+            var students = dbContext.Users.Include(u => u.Claims).Include(u=>u.TeacherGroups).ToList()
                 .Where(u => u.Type == "Student" && teacher.TeacherGroups.Select(tg=>tg.GroupId).Contains(u.GroupId.GetValueOrDefault()))
                 .ToList();
             ViewBag.Students = students;
