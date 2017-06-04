@@ -52,7 +52,7 @@
                     <thead>
                         <tr>
                             <th>Ученик</th>
-                            @foreach (var s in Model.Subjects)
+                            @foreach (var s in Model.Subjects.Where(sub=>group.SubjectGroups.Select(sg=>sg.SubjectId).Contains(sub.Id)))
                 {
                                 <th>@s.Name</th>
                             }
@@ -65,9 +65,9 @@ isGroup ? Model.Students
                         {
                             <tr>
                                 <td>@(stud.Claims.FirstOrDefault(c => c.ClaimType == "Name")?.ClaimValue ?? stud.UserName)</td>
-                                @foreach (var s in Model.Subjects)
-                    {
-                        bool mySubject = isAdmin || User.Claims.Any(c => (c.Type == "Subject") && (c.Value == s.Id.ToString()));
+                                @foreach (var s in Model.Subjects.Where(sub => group.SubjectGroups.Select(sg => sg.SubjectId).Contains(sub.Id)))
+                                {
+                                    bool mySubject = isAdmin || User.Claims.Any(c => (c.Type == "Subject") && (c.Value == s.Id.ToString()));
                                     <td @(mySubject ? "class=success" : "") >
                                         <h5 data-student-id="@stud.Id" data-subject-id="@s.Id" @(mySubject ? "contenteditable=true" : "")>@(Model.Rates.SingleOrDefault(r => r.StudentId == stud.Id && r.SubjectId == s.Id)?.Value)</h5>
                                         <small>@(Model.Rates.SingleOrDefault(r => r.StudentId == stud.Id && r.SubjectId == s.Id)?.Date)</small>

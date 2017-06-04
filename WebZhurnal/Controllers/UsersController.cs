@@ -54,21 +54,23 @@ namespace WebZhurnal.Controllers
 
                     if (!String.IsNullOrWhiteSpace(Subject) && type == "Teacher")
                     {
-                        if (!_context.Subjects.Any(s => s.Name == Subject))
+                        int sId = 0;
+                        if (int.TryParse(Subject, out sId))
                         {
-                            var newSubject = _context.Subjects.Add(new Subject() { Name = Subject }).Entity;
-                            _context.SaveChanges();
-                            var subjectClaim = new IdentityUserClaim<string>
+                            var subject = _context.Subjects.FirstOrDefault(s => s.Id == sId);
+                            if (subject == null)
                             {
-                                ClaimType = "Subject",
-                                ClaimValue = (newSubject.Id.ToString())
-                            };
+                                subject = _context.Subjects.Add(new Subject() { Name = Subject }).Entity;
+                                _context.SaveChanges();
+                            }
+                            var subjectClaim = new IdentityUserClaim<string>() { ClaimType = "Subject", ClaimValue = subject.Id.ToString() };
+                            if (applicationUser.Claims.Where(cl => cl.ClaimType == "Subject").Count() > 0) applicationUser.Claims.Remove(applicationUser.Claims.First(cl => cl.ClaimType == "Subject"));
                             applicationUser.Claims.Add(subjectClaim);
                         }
 
                     }
 
-                    await _userManager.CreateAsync(applicationUser, "`1qw23E");
+                    await _userManager.CreateAsync(applicationUser, password);
                 }
                 catch
                 {

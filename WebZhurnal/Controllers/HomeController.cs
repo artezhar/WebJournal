@@ -74,7 +74,7 @@ namespace WebZhurnal.Controllers
 
             model.Subjects = dbContext.Subjects.ToList();
             model.Rates = dbContext.Rates.ToList();
-            model.Groups =dbContext.Groups.Include(u=>u.TeacherGroups).ToList();
+            model.Groups =dbContext.Groups.Include(u=>u.TeacherGroups).Include(u=>u.SubjectGroups).ToList();
             return View(model);
         }
 
